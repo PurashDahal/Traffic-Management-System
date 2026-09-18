@@ -56,6 +56,13 @@ public class SystemSettingService {
             throw new UnauthorizedException("Only Admin can upload web application logo.");
         }
 
+        // Clean up previous logo file if existed
+        systemSettingRepository.findBySettingKey(KEY_APP_LOGO).ifPresent(s -> {
+            if (s.getSettingValue() != null) {
+                fileStorageService.deleteFile(s.getSettingValue());
+            }
+        });
+
         String filePath = fileStorageService.storeFile(logoFile, "settings");
         saveOrUpdateSetting(KEY_APP_LOGO, filePath, admin);
 
@@ -68,6 +75,13 @@ public class SystemSettingService {
         if (admin.getRole() != RoleName.ADMIN) {
             throw new UnauthorizedException("Only Admin can upload or replace official eSewa QR code.");
         }
+
+        // Clean up previous QR file if existed
+        systemSettingRepository.findBySettingKey(KEY_ESEWA_QR).ifPresent(s -> {
+            if (s.getSettingValue() != null) {
+                fileStorageService.deleteFile(s.getSettingValue());
+            }
+        });
 
         String filePath = fileStorageService.storeFile(qrFile, "settings");
         saveOrUpdateSetting(KEY_ESEWA_QR, filePath, admin);

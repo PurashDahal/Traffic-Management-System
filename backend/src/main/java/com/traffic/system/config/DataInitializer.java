@@ -9,6 +9,7 @@ import com.traffic.system.repository.VehicleRepository;
 import com.traffic.system.repository.ViolationTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -18,6 +19,9 @@ import java.util.List;
 
 @Component
 public class DataInitializer implements CommandLineRunner {
+
+    @Autowired(required = false)
+    private JdbcTemplate jdbcTemplate;
 
     @Autowired
     private UserRepository userRepository;
@@ -33,6 +37,23 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+        // Fix database schema constraints if table was previously created with NOT NULL payment_proof_path
+        if (jdbcTemplate != null) {
+            String[] alterStatements = {
+                "ALTER TABLE payments ALTER COLUMN payment_proof_path DROP NOT NULL",
+                "ALTER TABLE payments ALTER COLUMN payment_proof_path SET NULL",
+                "ALTER TABLE payments ALTER COLUMN transaction_id DROP NOT NULL",
+                "ALTER TABLE payments ALTER COLUMN transaction_id SET NULL",
+                "ALTER TABLE payments ALTER COLUMN payment_method DROP NOT NULL",
+                "ALTER TABLE payments ALTER COLUMN payment_method SET NULL"
+            };
+            for (String sql : alterStatements) {
+                try {
+                    jdbcTemplate.execute(sql);
+                } catch (Exception ignored) {
+                }
+            }
+        }
         // Bootstrap Default Admin Account if missing
         if (!userRepository.existsByUsername("admin")) {
             User admin = User.builder()

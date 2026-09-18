@@ -74,6 +74,7 @@ function AppContent() {
         <Route path="/admin/users" element={<ProtectedRoute allowedRoles={['ADMIN']}><UserManagementPage /></ProtectedRoute>} />
         <Route path="/admin/officers" element={<ProtectedRoute allowedRoles={['ADMIN']}><OfficerManagementPage /></ProtectedRoute>} />
         <Route path="/admin/vehicles" element={<ProtectedRoute allowedRoles={['ADMIN']}><VehicleManagementPage /></ProtectedRoute>} />
+        <Route path="/admin/tickets" element={<ProtectedRoute allowedRoles={['ADMIN']}><TicketManagementPage /></ProtectedRoute>} />
         <Route path="/admin/violation-types" element={<ProtectedRoute allowedRoles={['ADMIN']}><ViolationTypesConfigPage /></ProtectedRoute>} />
         <Route path="/admin/pending-payments" element={<ProtectedRoute allowedRoles={['ADMIN']}><PendingPaymentsPage /></ProtectedRoute>} />
         <Route path="/admin/payments" element={<ProtectedRoute allowedRoles={['ADMIN']}><PaymentHistoryPage /></ProtectedRoute>} />

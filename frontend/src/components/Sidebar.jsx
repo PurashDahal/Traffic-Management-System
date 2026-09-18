@@ -106,6 +106,10 @@ const Sidebar = () => {
                   <Car className="w-4 h-4 text-sky-600 shrink-0" />
                   <span className="truncate">Vehicle Records</span>
                 </NavLink>
+                <NavLink to="/admin/tickets" className={navLinkClass} onClick={closeMobile}>
+                  <FileText className="w-4 h-4 text-sky-600 shrink-0" />
+                  <span className="truncate">Violation Tickets</span>
+                </NavLink>
                 <NavLink to="/admin/violation-types" className={navLinkClass} onClick={closeMobile}>
                   <FileCheck className="w-4 h-4 text-sky-600 shrink-0" />
                   <span className="truncate">Violation & Fine Rules</span>

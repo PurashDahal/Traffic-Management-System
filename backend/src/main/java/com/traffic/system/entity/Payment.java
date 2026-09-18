@@ -1,5 +1,6 @@
 package com.traffic.system.entity;
 
+import com.traffic.system.enums.PaymentMethod;
 import com.traffic.system.enums.PaymentStatus;
 import jakarta.persistence.*;
 import lombok.*;
@@ -26,10 +27,15 @@ public class Payment {
     @Column(nullable = false)
     private BigDecimal amount;
 
-    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = true)
+    @Builder.Default
+    private PaymentMethod paymentMethod = PaymentMethod.ESEWA;
+
+    @Column(nullable = true)
     private String transactionId;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String paymentProofPath;
 
     @Enumerated(EnumType.STRING)
@@ -38,6 +44,9 @@ public class Payment {
 
     @Column(length = 1000)
     private String rejectionReason;
+
+    @Column(length = 1000)
+    private String notes;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "verified_by")

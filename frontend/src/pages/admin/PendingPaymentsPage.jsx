@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import api from '../../services/api';
 import AdminPaymentVerifyModal from '../../components/AdminPaymentVerifyModal';
 import StatusBadge from '../../components/StatusBadge';
-import { CreditCard, Clock, CheckCircle2, Eye } from 'lucide-react';
+import { CreditCard, Clock, CheckCircle2, Eye, Banknote, QrCode } from 'lucide-react';
 
 const PendingPaymentsPage = () => {
   const [payments, setPayments] = useState([]);
@@ -44,7 +44,8 @@ const PendingPaymentsPage = () => {
                 <th className="p-3.5 sm:p-4">Ticket ID</th>
                 <th className="p-3.5 sm:p-4">Vehicle & Owner</th>
                 <th className="p-3.5 sm:p-4">Amount</th>
-                <th className="p-3.5 sm:p-4">Transaction ID</th>
+                <th className="p-3.5 sm:p-4">Method</th>
+                <th className="p-3.5 sm:p-4">Reference / Txn ID</th>
                 <th className="p-3.5 sm:p-4">Status</th>
                 <th className="p-3.5 sm:p-4 text-right">Review Action</th>
               </tr>
@@ -52,10 +53,10 @@ const PendingPaymentsPage = () => {
             <tbody className="divide-y divide-slate-100">
               {payments.length === 0 ? (
                 <tr>
-                  <td colSpan="6" className="p-8 sm:p-12 text-center text-slate-400">
+                  <td colSpan="7" className="p-8 sm:p-12 text-center text-slate-400">
                     <CheckCircle2 className="w-10 h-10 text-emerald-400 mx-auto mb-2 opacity-80" />
                     <p className="font-semibold text-slate-600">No pending payments to review!</p>
-                    <p className="text-[11px] text-slate-400 mt-0.5">All submitted eSewa payments have been processed.</p>
+                    <p className="text-[11px] text-slate-400 mt-0.5">All submitted payments have been processed.</p>
                   </td>
                 </tr>
               ) : (
@@ -69,6 +70,15 @@ const PendingPaymentsPage = () => {
                     <td className="p-3.5 sm:p-4 font-bold text-emerald-700 font-mono text-sm whitespace-nowrap">
                       Rs. {p.amount?.toLocaleString()}
                     </td>
+                    <td className="p-3.5 sm:p-4 whitespace-nowrap">
+                      <span className={`text-[11px] font-bold px-2.5 py-1 rounded-lg inline-flex items-center gap-1 border ${
+                        p.paymentMethod === 'CASH'
+                          ? 'bg-amber-100 text-amber-900 border-amber-300'
+                          : 'bg-emerald-100 text-emerald-900 border-emerald-300'
+                      }`}>
+                        {p.paymentMethod === 'CASH' ? <><Banknote className="w-3.5 h-3.5" /> Cash</> : <><QrCode className="w-3.5 h-3.5" /> eSewa</>}
+                      </span>
+                    </td>
                     <td className="p-3.5 sm:p-4 font-mono font-bold text-slate-800 whitespace-nowrap">
                       <span className="bg-slate-50 px-2 py-1 rounded inline-block border border-slate-200">
                         {p.transactionId}
@@ -80,9 +90,13 @@ const PendingPaymentsPage = () => {
                     <td className="p-3.5 sm:p-4 text-right whitespace-nowrap">
                       <button
                         onClick={() => setSelectedPayment(p)}
-                        className="px-3.5 py-1.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold rounded-lg shadow text-xs inline-flex items-center gap-1 ml-auto"
+                        className={`px-3.5 py-1.5 font-bold rounded-lg shadow text-xs inline-flex items-center gap-1 ml-auto cursor-pointer ${
+                          p.paymentMethod === 'CASH'
+                            ? 'bg-amber-500 hover:bg-amber-600 text-slate-950'
+                            : 'bg-emerald-600 hover:bg-emerald-700 text-white'
+                        }`}
                       >
-                        <Eye className="w-3.5 h-3.5" /> Inspect Proof & Verify
+                        <Eye className="w-3.5 h-3.5" /> {p.paymentMethod === 'CASH' ? 'Confirm Cash & Verify' : 'Inspect Proof & Verify'}
                       </button>
                     </td>
                   </tr>

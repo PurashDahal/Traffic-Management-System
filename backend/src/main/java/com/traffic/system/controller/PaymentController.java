@@ -23,8 +23,27 @@ public class PaymentController {
     @PostMapping(value = "/submit", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<PaymentDto> submitPaymentProof(
             @RequestPart("data") PaymentSubmitDto dto,
-            @RequestPart("proof") MultipartFile proofFile) {
+            @RequestPart(value = "proof", required = false) MultipartFile proofFile) {
         return ResponseEntity.ok(paymentService.submitPaymentProof(dto, proofFile));
+    }
+
+    @PostMapping("/cash-submit")
+    public ResponseEntity<PaymentDto> submitCashPayment(@RequestBody java.util.Map<String, Object> payload) {
+        if (payload == null || !payload.containsKey("ticketId") || payload.get("ticketId") == null) {
+            throw new IllegalArgumentException("Ticket ID is required for cash payment submission.");
+        }
+        Long ticketId = Long.valueOf(payload.get("ticketId").toString());
+        String notes = payload.get("notes") != null ? payload.get("notes").toString() : null;
+        return ResponseEntity.ok(paymentService.submitCashPayment(ticketId, notes));
+    }
+
+    @PostMapping("/cash-collect/{ticketId}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TRAFFIC_OFFICER')")
+    public ResponseEntity<PaymentDto> collectCashPaymentDirectly(
+            @PathVariable Long ticketId,
+            @RequestBody(required = false) java.util.Map<String, String> payload) {
+        String notes = (payload != null && payload.containsKey("notes")) ? payload.get("notes") : null;
+        return ResponseEntity.ok(paymentService.collectCashPaymentDirectly(ticketId, notes));
     }
 
     @PutMapping("/{id}/verify")

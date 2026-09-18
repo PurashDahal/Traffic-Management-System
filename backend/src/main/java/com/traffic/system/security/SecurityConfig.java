@@ -62,9 +62,9 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> 
                 auth.requestMatchers("/api/auth/**").permitAll()
                     .requestMatchers("/api/files/**").permitAll()
+                    .requestMatchers("/api/settings/public").permitAll()
                     .requestMatchers("/api/settings/public/**").permitAll()
-                    .requestMatchers(HttpMethod.GET, "/api/settings/logo").permitAll()
-                    .requestMatchers(HttpMethod.GET, "/api/settings/esewa-qr").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/settings/**").permitAll()
                     .requestMatchers("/api/admin/**").hasRole("ADMIN")
                     .requestMatchers("/api/officer/**").hasAnyRole("TRAFFIC_OFFICER", "ADMIN")
                     .requestMatchers("/api/owner/**").hasAnyRole("VEHICLE_OWNER", "ADMIN")

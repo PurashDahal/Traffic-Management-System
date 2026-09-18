@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import StatusBadge from './StatusBadge';
-import { Shield, MapPin, Calendar, Clock, User, Car, FileText, QrCode, Trash2 } from 'lucide-react';
+import { getFileUrl } from '../services/api';
+import { Shield, MapPin, Calendar, Clock, User, Car, FileText, QrCode, Trash2, Banknote, CheckCircle2 } from 'lucide-react';
 
-const DigitalTicketCard = ({ ticket, onPayClick, onDeleteClick }) => {
+const DigitalTicketCard = ({ ticket, onPayClick, onDeleteClick, onCollectCashClick }) => {
   if (!ticket) return null;
 
   const formattedDate = new Date(ticket.violationTime || ticket.issuedAt).toLocaleDateString('en-US', {
@@ -15,6 +16,8 @@ const DigitalTicketCard = ({ ticket, onPayClick, onDeleteClick }) => {
     hour: '2-digit',
     minute: '2-digit'
   });
+
+  const paymentMethod = ticket.paymentDetails?.paymentMethod;
 
   return (
     <div className="max-w-xl mx-auto w-full bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden font-mono min-w-0">
@@ -101,7 +104,7 @@ const DigitalTicketCard = ({ ticket, onPayClick, onDeleteClick }) => {
               {ticket.evidenceFilePaths.map((path, idx) => (
                 <img
                   key={idx}
-                  src={`/api/files/${path}`}
+                  src={getFileUrl(path)}
                   alt="Violation Evidence"
                   className="w-full max-h-48 object-cover rounded-xl border border-slate-300"
                 />
@@ -117,8 +120,23 @@ const DigitalTicketCard = ({ ticket, onPayClick, onDeleteClick }) => {
             <span className="text-lg sm:text-xl font-bold text-amber-400">Rs. {ticket.fineAmount?.toLocaleString()}</span>
           </div>
           <div className="sm:text-right font-sans">
-            <span className="text-[10px] sm:text-xs text-slate-400 block mb-1 uppercase">Payment Status</span>
-            <StatusBadge status={ticket.paymentStatus} />
+            <div className="flex items-center gap-2 justify-end">
+              {paymentMethod && (
+                <span className={`text-[10px] font-bold px-2 py-0.5 rounded flex items-center gap-1 border ${
+                  paymentMethod === 'CASH'
+                    ? 'bg-amber-400/20 text-amber-300 border-amber-400/40'
+                    : 'bg-emerald-400/20 text-emerald-300 border-emerald-400/40'
+                }`}>
+                  {paymentMethod === 'CASH' ? <><Banknote className="w-3 h-3" /> CASH</> : <><QrCode className="w-3 h-3" /> eSewa</>}
+                </span>
+              )}
+              <StatusBadge status={ticket.paymentStatus} />
+            </div>
+            {ticket.paymentDetails?.verifiedByName && (
+              <span className="text-[10px] text-slate-400 block mt-1 font-mono">
+                Verified: {ticket.paymentDetails.verifiedByName}
+              </span>
+            )}
           </div>
         </div>
 
@@ -132,17 +150,28 @@ const DigitalTicketCard = ({ ticket, onPayClick, onDeleteClick }) => {
             {onDeleteClick && (
               <button
                 onClick={() => onDeleteClick(ticket)}
-                className="w-full sm:w-auto bg-rose-600 hover:bg-rose-700 text-white px-3 py-2 rounded-xl font-semibold shadow transition-all flex items-center justify-center gap-1 text-xs"
+                className="w-full sm:w-auto bg-rose-600 hover:bg-rose-700 text-white px-3 py-2 rounded-xl font-semibold shadow transition-all flex items-center justify-center gap-1 text-xs cursor-pointer"
               >
                 <Trash2 className="w-4 h-4" /> Delete
               </button>
             )}
+
+            {onCollectCashClick && (ticket.paymentStatus === 'UNPAID' || ticket.paymentStatus === 'REJECTED' || (ticket.paymentStatus === 'PENDING_VERIFICATION' && paymentMethod === 'CASH')) && (
+              <button
+                onClick={() => onCollectCashClick(ticket)}
+                className="w-full sm:w-auto bg-amber-500 hover:bg-amber-600 text-slate-950 px-3.5 py-2 rounded-xl font-bold shadow transition-all flex items-center justify-center gap-1.5 text-xs cursor-pointer"
+                title="Officer collects fine cash on spot and confirms PAID"
+              >
+                <Banknote className="w-4 h-4" /> Collect Cash (Mark PAID)
+              </button>
+            )}
+
             {onPayClick && (ticket.paymentStatus === 'UNPAID' || ticket.paymentStatus === 'REJECTED') && (
               <button
                 onClick={() => onPayClick(ticket)}
-                className="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl font-bold shadow transition-all text-xs text-center"
+                className="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl font-bold shadow transition-all text-xs text-center cursor-pointer flex items-center justify-center gap-1.5"
               >
-                Pay via eSewa QR
+                <span>Pay Fine (eSewa / Cash)</span>
               </button>
             )}
           </div>

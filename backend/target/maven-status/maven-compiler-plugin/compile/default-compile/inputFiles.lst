@@ -63,6 +63,7 @@
 /Users/purashdahal/.gemini/antigravity/scratch/traffic-violation-system/backend/src/main/java/com/traffic/system/service/AuditLogService.java
 /Users/purashdahal/.gemini/antigravity/scratch/traffic-violation-system/backend/src/main/java/com/traffic/system/repository/AuditLogRepository.java
 /Users/purashdahal/.gemini/antigravity/scratch/traffic-violation-system/backend/src/main/java/com/traffic/system/dto/NaturalLanguageQueryDto.java
+/Users/purashdahal/.gemini/antigravity/scratch/traffic-violation-system/backend/src/main/java/com/traffic/system/enums/PaymentMethod.java
 /Users/purashdahal/.gemini/antigravity/scratch/traffic-violation-system/backend/src/main/java/com/traffic/system/service/ViolationTypeService.java
 /Users/purashdahal/.gemini/antigravity/scratch/traffic-violation-system/backend/src/main/java/com/traffic/system/exception/UnauthorizedException.java
 /Users/purashdahal/.gemini/antigravity/scratch/traffic-violation-system/backend/src/main/java/com/traffic/system/dto/AiDescriptionRequest.java

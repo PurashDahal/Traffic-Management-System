@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import api from '../services/api';
+import api, { getFileUrl } from '../services/api';
 
 const SystemSettingsContext = createContext();
 
@@ -9,13 +9,16 @@ export const SystemSettingsProvider = ({ children }) => {
     ESEWA_QR_PATH: null,
     SYSTEM_NAME: 'AI Digital Traffic System'
   });
+  const [lastUpdated, setLastUpdated] = useState(Date.now());
 
   const fetchSettings = async () => {
     try {
       const res = await api.get('/settings/public');
-      setSettings(res.data);
+      setSettings(res.data || {});
+      setLastUpdated(Date.now());
+      return res.data;
     } catch (err) {
-      console.error('Failed to load system settings');
+      console.error('Failed to load system settings:', err);
     }
   };
 
@@ -25,20 +28,22 @@ export const SystemSettingsProvider = ({ children }) => {
 
   const getLogoUrl = () => {
     if (settings.APP_LOGO_PATH) {
-      return `/api/files/${settings.APP_LOGO_PATH}`;
+      const rawUrl = getFileUrl(settings.APP_LOGO_PATH);
+      return rawUrl ? `${rawUrl}?v=${lastUpdated}` : '/logo/logo.png';
     }
     return '/logo/logo.png';
   };
 
   const getEsewaQrUrl = () => {
     if (settings.ESEWA_QR_PATH) {
-      return `/api/files/${settings.ESEWA_QR_PATH}`;
+      const rawUrl = getFileUrl(settings.ESEWA_QR_PATH);
+      return rawUrl ? `${rawUrl}?v=${lastUpdated}` : null;
     }
     return null;
   };
 
   return (
-    <SystemSettingsContext.Provider value={{ settings, fetchSettings, getLogoUrl, getEsewaQrUrl }}>
+    <SystemSettingsContext.Provider value={{ settings, fetchSettings, getLogoUrl, getEsewaQrUrl, lastUpdated }}>
       {children}
     </SystemSettingsContext.Provider>
   );

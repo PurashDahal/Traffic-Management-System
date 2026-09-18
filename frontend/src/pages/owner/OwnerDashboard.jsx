@@ -76,7 +76,7 @@ const OwnerDashboard = () => {
           <div className="bg-rose-50 border border-rose-200 p-3.5 sm:p-4 rounded-2xl flex items-center justify-between text-rose-900">
             <div className="flex items-center gap-2 text-xs font-bold">
               <AlertCircle className="w-5 h-5 text-rose-600 shrink-0" />
-              <span className="break-words">You have {unpaidTickets.length} unpaid fine(s). Scan the official eSewa QR code to complete payment.</span>
+              <span className="break-words">You have {unpaidTickets.length} unpaid fine(s). Pay via eSewa QR or Cash handover to traffic police.</span>
             </div>
           </div>
 

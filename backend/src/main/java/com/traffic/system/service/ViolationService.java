@@ -173,28 +173,50 @@ public class ViolationService {
                 .orElseThrow(() -> new ResourceNotFoundException("Ticket not found with id: " + ticketId));
 
         Violation violation = ticket.getViolation();
+        String ticketNumber = ticket.getTicketNumber();
+        String vehicleNumber = (violation != null && violation.getVehicle() != null) ? violation.getVehicle().getVehicleNumber() : "N/A";
+        User vehicleOwner = (violation != null && violation.getVehicle() != null) ? violation.getVehicle().getOwner() : null;
 
-        // Delete associated payment if exists
+        // 1. Delete associated payment and payment proof file if exists
         Payment payment = paymentRepository.findByTicket(ticket).orElse(null);
         if (payment != null) {
+            if (payment.getPaymentProofPath() != null) {
+                fileStorageService.deleteFile(payment.getPaymentProofPath());
+            }
             paymentRepository.delete(payment);
         }
 
-        // Delete associated evidence records
+        // 2. Delete associated evidence records and files
         List<Evidence> evidences = evidenceRepository.findByTicket(ticket);
         if (!evidences.isEmpty()) {
+            for (Evidence ev : evidences) {
+                if (ev.getFilePath() != null) {
+                    fileStorageService.deleteFile(ev.getFilePath());
+                }
+            }
             evidenceRepository.deleteAll(evidences);
         }
 
-        // Delete Ticket & Violation
+        // 3. Delete Ticket & Violation
         ticketRepository.delete(ticket);
         if (violation != null) {
             violationRepository.delete(violation);
         }
 
-        // Audit Log
+        // 4. Send cancellation notification to Vehicle Owner
+        if (vehicleOwner != null) {
+            try {
+                notificationService.sendNotification(
+                        vehicleOwner,
+                        "Violation Ticket Cancelled",
+                        "Traffic violation ticket " + ticketNumber + " for vehicle " + vehicleNumber + " has been cancelled and removed by the Administrator."
+                );
+            } catch (Exception ignored) {}
+        }
+
+        // 5. Audit Log
         auditLogService.logAction(currentUser, "TICKET_DELETED", "Ticket", ticketId.toString(),
-                "Admin deleted ticket " + ticket.getTicketNumber() + " (Vehicle: " + (violation != null && violation.getVehicle() != null ? violation.getVehicle().getVehicleNumber() : "N/A") + ")", null);
+                "Admin deleted ticket " + ticketNumber + " (Vehicle: " + vehicleNumber + ")", null);
     }
 
     private synchronized String generateUniqueTicketNumber() {
@@ -204,35 +226,39 @@ public class ViolationService {
     }
 
     public TicketDto mapToTicketDto(Ticket ticket) {
+        if (ticket == null) return null;
         Violation v = ticket.getViolation();
-        Vehicle vehicle = v.getVehicle();
-        User owner = vehicle.getOwner();
-        User officer = v.getOfficer();
+        Vehicle vehicle = (v != null) ? v.getVehicle() : null;
+        User owner = (vehicle != null) ? vehicle.getOwner() : null;
+        User officer = (v != null) ? v.getOfficer() : null;
+        ViolationType vType = (v != null) ? v.getViolationType() : null;
 
         List<Evidence> evidences = evidenceRepository.findByTicket(ticket);
-        List<String> evidencePaths = evidences.stream().map(Evidence::getFilePath).collect(Collectors.toList());
+        List<String> evidencePaths = (evidences != null)
+                ? evidences.stream().map(Evidence::getFilePath).collect(Collectors.toList())
+                : new ArrayList<>();
 
         Payment payment = paymentRepository.findByTicket(ticket).orElse(null);
 
         return TicketDto.builder()
                 .id(ticket.getId())
                 .ticketNumber(ticket.getTicketNumber())
-                .violationId(v.getId())
-                .vehicleNumber(vehicle.getVehicleNumber())
-                .vehicleType(vehicle.getVehicleType())
-                .ownerName(owner.getFullName())
-                .ownerPhone(owner.getPhone())
-                .categoryName(v.getViolationType().getCategoryName())
-                .description(v.getViolationType().getDescription())
-                .location(v.getLocation())
-                .violationTime(v.getViolationTime())
-                .officerNotes(v.getOfficerNotes())
-                .officerName(officer.getFullName())
-                .officerUsername(officer.getUsername())
+                .violationId(v != null ? v.getId() : null)
+                .vehicleNumber(vehicle != null ? vehicle.getVehicleNumber() : null)
+                .vehicleType(vehicle != null ? vehicle.getVehicleType() : null)
+                .ownerName(owner != null ? owner.getFullName() : null)
+                .ownerPhone(owner != null ? owner.getPhone() : null)
+                .categoryName(vType != null ? vType.getCategoryName() : null)
+                .description(vType != null ? vType.getDescription() : null)
+                .location(v != null ? v.getLocation() : null)
+                .violationTime(v != null ? v.getViolationTime() : null)
+                .officerNotes(v != null ? v.getOfficerNotes() : null)
+                .officerName(officer != null ? officer.getFullName() : null)
+                .officerUsername(officer != null ? officer.getUsername() : null)
                 .fineAmount(ticket.getFineAmount())
                 .paymentStatus(ticket.getPaymentStatus())
-                .aiStatus(v.getAiStatus())
-                .aiSuggestionRaw(v.getAiSuggestionRaw())
+                .aiStatus(v != null ? v.getAiStatus() : null)
+                .aiSuggestionRaw(v != null ? v.getAiSuggestionRaw() : null)
                 .issuedAt(ticket.getIssuedAt())
                 .evidenceFilePaths(evidencePaths)
                 .paymentDetails(payment != null ? PaymentService.mapToPaymentDto(payment) : null)

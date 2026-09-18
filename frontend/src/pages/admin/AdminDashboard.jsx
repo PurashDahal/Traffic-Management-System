@@ -38,6 +38,12 @@ const AdminDashboard = () => {
         </div>
         <div className="flex flex-wrap sm:flex-nowrap gap-2 shrink-0">
           <Link
+            to="/admin/tickets"
+            className="w-full sm:w-auto px-3.5 py-2 bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs rounded-xl shadow transition-all flex items-center justify-center gap-1.5"
+          >
+            <FileText className="w-4 h-4 shrink-0" /> Manage Tickets
+          </Link>
+          <Link
             to="/admin/pending-payments"
             className="w-full sm:w-auto px-3.5 py-2 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs rounded-xl shadow transition-all flex items-center justify-center gap-1.5"
           >
@@ -162,7 +168,13 @@ const AdminDashboard = () => {
       )}
 
       {/* Quick Action Navigation Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <Link to="/admin/tickets" className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 hover:border-sky-400 shadow-sm transition-all group">
+          <FileText className="w-7 h-7 text-sky-600 mb-2 group-hover:scale-110 transition-transform" />
+          <h3 className="font-bold text-sm text-slate-900">Violation Tickets</h3>
+          <p className="text-xs text-slate-500 mt-1 break-words">Manage, search, and delete accidental tickets across all portals.</p>
+        </Link>
+
         <Link to="/admin/pending-payments" className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 hover:border-amber-400 shadow-sm transition-all group">
           <CreditCard className="w-7 h-7 text-amber-500 mb-2 group-hover:scale-110 transition-transform" />
           <h3 className="font-bold text-sm text-slate-900">Review Pending Payments</h3>
