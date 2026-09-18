@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { SystemSettingsProvider } from './context/SystemSettingsContext';
+import { SidebarProvider } from './context/SidebarContext';
 
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
@@ -41,9 +42,9 @@ const ProtectedRoute = ({ allowedRoles, children }) => {
     return <Navigate to="/owner" replace />;
   }
   return (
-    <div className="flex bg-slate-50 min-h-[calc(100vh-4rem)]">
+    <div className="flex bg-slate-50 min-h-[calc(100vh-4rem)] relative w-full overflow-x-hidden">
       <Sidebar />
-      <main className="flex-1 p-6 overflow-y-auto max-w-7xl mx-auto w-full">
+      <main className="flex-1 p-3.5 sm:p-6 overflow-y-auto max-w-7xl mx-auto w-full min-w-0">
         {children}
       </main>
     </div>
@@ -61,7 +62,7 @@ const RootRedirect = () => {
 
 function AppContent() {
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col font-['Inter',sans-serif]">
+    <div className="min-h-screen bg-slate-50 flex flex-col font-['Inter',sans-serif] text-slate-800 antialiased">
       <Navbar />
       <Routes>
         <Route path="/" element={<RootRedirect />} />
@@ -85,6 +86,7 @@ function AppContent() {
         <Route path="/officer/search-vehicle" element={<ProtectedRoute allowedRoles={['TRAFFIC_OFFICER', 'ADMIN']}><VehicleSearchPage /></ProtectedRoute>} />
         <Route path="/officer/create-violation" element={<ProtectedRoute allowedRoles={['TRAFFIC_OFFICER', 'ADMIN']}><CreateViolationPage /></ProtectedRoute>} />
         <Route path="/officer/tickets" element={<ProtectedRoute allowedRoles={['TRAFFIC_OFFICER', 'ADMIN']}><TicketManagementPage /></ProtectedRoute>} />
+        <Route path="/officer/pending-payments" element={<ProtectedRoute allowedRoles={['TRAFFIC_OFFICER', 'ADMIN']}><PendingPaymentsPage /></ProtectedRoute>} />
 
         {/* OWNER ROUTES */}
         <Route path="/owner" element={<ProtectedRoute allowedRoles={['VEHICLE_OWNER', 'ADMIN']}><OwnerDashboard /></ProtectedRoute>} />
@@ -104,7 +106,9 @@ function App() {
     <BrowserRouter>
       <AuthProvider>
         <SystemSettingsProvider>
-          <AppContent />
+          <SidebarProvider>
+            <AppContent />
+          </SidebarProvider>
         </SystemSettingsProvider>
       </AuthProvider>
     </BrowserRouter>

@@ -82,29 +82,30 @@ const VehicleManagementPage = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3">
         <div>
-          <h1 className="text-2xl font-extrabold text-slate-900 flex items-center gap-2">
-            <Car className="w-6 h-6 text-sky-600" /> Vehicle Database
+          <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 flex items-center gap-2">
+            <Car className="w-5 h-5 sm:w-6 sm:h-6 text-sky-600 shrink-0" />
+            <span className="truncate">Vehicle Database</span>
           </h1>
-          <p className="text-xs text-slate-500">Centralized vehicle registration & ownership index</p>
+          <p className="text-xs text-slate-500 mt-0.5">Centralized vehicle registration & ownership index</p>
         </div>
 
-        <div className="flex items-center gap-3">
-          <div className="relative">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
+          <div className="relative w-full sm:w-60">
             <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
             <input
               type="text"
-              placeholder="Search vehicle number or owner..."
+              placeholder="Search vehicle or owner..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="pl-9 pr-4 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-slate-900 focus:outline-none w-64"
+              className="w-full pl-9 pr-4 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-slate-900 focus:outline-none"
             />
           </div>
 
           <button
             onClick={() => setShowAddModal(!showAddModal)}
-            className="px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs rounded-xl shadow flex items-center gap-1.5 shrink-0"
+            className="px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs rounded-xl shadow flex items-center justify-center gap-1.5 shrink-0"
           >
             <Plus className="w-4 h-4" /> Add Vehicle
           </button>
@@ -112,23 +113,23 @@ const VehicleManagementPage = () => {
       </div>
 
       {msg && (
-        <div className="bg-emerald-50 text-emerald-800 p-4 rounded-xl text-xs flex items-center gap-2 border border-emerald-200">
+        <div className="bg-emerald-50 text-emerald-800 p-3.5 sm:p-4 rounded-xl text-xs flex items-center gap-2 border border-emerald-200">
           <CheckCircle2 className="w-4 h-4 shrink-0" />
-          <span>{msg}</span>
+          <span className="break-words">{msg}</span>
         </div>
       )}
 
       {error && (
-        <div className="bg-rose-50 text-rose-800 p-4 rounded-xl text-xs flex items-center gap-2 border border-rose-200">
+        <div className="bg-rose-50 text-rose-800 p-3.5 sm:p-4 rounded-xl text-xs flex items-center gap-2 border border-rose-200">
           <AlertCircle className="w-4 h-4 shrink-0" />
-          <span>{error}</span>
+          <span className="break-words">{error}</span>
         </div>
       )}
 
       {showAddModal && (
-        <div className="bg-white rounded-2xl border border-sky-200 p-6 shadow-md">
+        <div className="bg-white rounded-2xl border border-sky-200 p-4 sm:p-6 shadow-md">
           <h3 className="font-bold text-xs uppercase tracking-wide text-slate-900 mb-3">Register New Vehicle</h3>
-          <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+          <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
             <div>
               <label className="block font-bold text-slate-700 uppercase mb-1">Vehicle Number *</label>
               <input
@@ -181,7 +182,7 @@ const VehicleManagementPage = () => {
               />
             </div>
 
-            <div className="md:col-span-2">
+            <div className="sm:col-span-2">
               <label className="block font-bold text-slate-700 uppercase mb-1">Assign Registered Owner (Optional)</label>
               <select
                 name="ownerId"
@@ -198,7 +199,7 @@ const VehicleManagementPage = () => {
               </select>
             </div>
 
-            <div className="md:col-span-2 flex justify-end gap-2 pt-2">
+            <div className="sm:col-span-2 flex justify-end gap-2 pt-2">
               <button
                 type="button"
                 onClick={() => setShowAddModal(false)}
@@ -219,37 +220,39 @@ const VehicleManagementPage = () => {
       )}
 
       <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-        <table className="w-full text-left text-xs">
-          <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-bold uppercase">
-            <tr>
-              <th className="p-4">Vehicle Number</th>
-              <th className="p-4">Vehicle Type</th>
-              <th className="p-4">Registered Owner</th>
-              <th className="p-4">Model</th>
-              <th className="p-4">Bluebook No</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-slate-100">
-            {filtered.length === 0 ? (
+        <div className="overflow-x-auto w-full">
+          <table className="w-full text-left text-xs min-w-[650px]">
+            <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-bold uppercase">
               <tr>
-                <td colSpan="5" className="p-8 text-center text-slate-400">No vehicle records found.</td>
+                <th className="p-3.5 sm:p-4">Vehicle Number</th>
+                <th className="p-3.5 sm:p-4">Vehicle Type</th>
+                <th className="p-3.5 sm:p-4">Registered Owner</th>
+                <th className="p-3.5 sm:p-4">Model</th>
+                <th className="p-3.5 sm:p-4">Bluebook No</th>
               </tr>
-            ) : (
-              filtered.map(v => (
-                <tr key={v.id} className="hover:bg-slate-50">
-                  <td className="p-4 font-mono font-bold text-slate-900 text-sm">{v.vehicleNumber}</td>
-                  <td className="p-4 font-semibold text-slate-700">{v.vehicleType}</td>
-                  <td className="p-4 font-semibold text-slate-900">
-                    <div>{v.ownerName}</div>
-                    <span className="text-[10px] text-slate-400 font-normal">@{v.ownerUsername} | Ph: {v.ownerPhone || 'N/A'}</span>
-                  </td>
-                  <td className="p-4 text-slate-600">{v.model || '-'}</td>
-                  <td className="p-4 text-slate-600 font-mono text-[11px]">{v.bluebookNumber || '-'}</td>
+            </thead>
+            <tbody className="divide-y divide-slate-100">
+              {filtered.length === 0 ? (
+                <tr>
+                  <td colSpan="5" className="p-8 text-center text-slate-400">No vehicle records found.</td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+              ) : (
+                filtered.map(v => (
+                  <tr key={v.id} className="hover:bg-slate-50">
+                    <td className="p-3.5 sm:p-4 font-mono font-bold text-slate-900 text-sm whitespace-nowrap">{v.vehicleNumber}</td>
+                    <td className="p-3.5 sm:p-4 font-semibold text-slate-700 whitespace-nowrap">{v.vehicleType}</td>
+                    <td className="p-3.5 sm:p-4 font-semibold text-slate-900">
+                      <div>{v.ownerName}</div>
+                      <span className="text-[10px] text-slate-400 font-normal">@{v.ownerUsername} | Ph: {v.ownerPhone || 'N/A'}</span>
+                    </td>
+                    <td className="p-3.5 sm:p-4 text-slate-600">{v.model || '-'}</td>
+                    <td className="p-3.5 sm:p-4 text-slate-600 font-mono text-[11px] whitespace-nowrap">{v.bluebookNumber || '-'}</td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

@@ -39,15 +39,16 @@ const VehicleSearchPage = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-extrabold text-slate-900 flex items-center gap-2">
-          <Search className="w-6 h-6 text-sky-600" /> Vehicle & Owner Lookup
+        <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 flex items-center gap-2">
+          <Search className="w-5 h-5 sm:w-6 sm:h-6 text-sky-600 shrink-0" />
+          <span className="truncate">Vehicle & Owner Lookup</span>
         </h1>
-        <p className="text-xs text-slate-500">Search vehicle number to view bluebook records and violation history</p>
+        <p className="text-xs text-slate-500 mt-0.5">Search vehicle number to view bluebook records and violation history</p>
       </div>
 
       {/* Search Bar */}
-      <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm max-w-xl">
-        <form onSubmit={handleSearch} className="flex gap-2">
+      <div className="bg-white rounded-2xl p-4 sm:p-6 border border-slate-200 shadow-sm max-w-xl">
+        <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-2">
           <div className="relative flex-1">
             <Car className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
             <input
@@ -62,7 +63,7 @@ const VehicleSearchPage = () => {
           <button
             type="submit"
             disabled={loading}
-            className="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl shadow flex items-center gap-1.5 transition-all disabled:opacity-50"
+            className="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl shadow flex items-center justify-center gap-1.5 transition-all disabled:opacity-50 shrink-0"
           >
             <Search className="w-4 h-4" /> {loading ? 'Searching...' : 'Search Record'}
           </button>
@@ -70,41 +71,41 @@ const VehicleSearchPage = () => {
       </div>
 
       {error && (
-        <div className="bg-rose-50 text-rose-700 p-4 rounded-xl text-xs flex items-center gap-2 border border-rose-200 max-w-xl">
+        <div className="bg-rose-50 text-rose-700 p-3.5 sm:p-4 rounded-xl text-xs flex items-center gap-2 border border-rose-200 max-w-xl">
           <AlertCircle className="w-4 h-4 shrink-0" />
-          <span>{error}</span>
+          <span className="break-words">{error}</span>
         </div>
       )}
 
       {/* Vehicle Info Result */}
       {vehicle && (
         <div className="space-y-6">
-          <div className="bg-white rounded-2xl border border-sky-200 p-6 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-            <div className="space-y-1">
+          <div className="bg-white rounded-2xl border border-sky-200 p-4 sm:p-6 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div className="space-y-1 min-w-0">
               <span className="text-[10px] font-bold text-sky-800 uppercase tracking-wider block">Registered Vehicle</span>
-              <h2 className="text-2xl font-extrabold text-slate-900 font-mono">{vehicle.vehicleNumber}</h2>
-              <div className="flex gap-4 text-xs text-slate-600 pt-1">
+              <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 font-mono break-words">{vehicle.vehicleNumber}</h2>
+              <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-600 pt-1">
                 <span>Type: <strong className="text-slate-800">{vehicle.vehicleType}</strong></span>
                 <span>Model: <strong className="text-slate-800">{vehicle.model || '-'}</strong></span>
                 <span>Bluebook: <strong className="text-slate-800 font-mono">{vehicle.bluebookNumber || '-'}</strong></span>
               </div>
-              <div className="text-xs text-slate-600 pt-1">
+              <div className="text-xs text-slate-600 pt-1 break-words">
                 Owner: <strong className="text-slate-900">{vehicle.ownerName}</strong> (@{vehicle.ownerUsername}) | Contact: <strong>{vehicle.ownerPhone || 'N/A'}</strong>
               </div>
             </div>
 
             <button
               onClick={() => navigate('/officer/create-violation', { state: { vehicleNumber: vehicle.vehicleNumber } })}
-              className="px-5 py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs rounded-xl shadow flex items-center gap-1.5 shrink-0"
+              className="w-full sm:w-auto px-5 py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs rounded-xl shadow flex items-center justify-center gap-1.5 shrink-0"
             >
-              <PlusCircle className="w-4 h-4" /> Issue Ticket for {vehicle.vehicleNumber}
+              <PlusCircle className="w-4 h-4" /> Issue Ticket
             </button>
           </div>
 
           {/* Past Violation History */}
           <div className="space-y-4">
             <h3 className="font-bold text-sm text-slate-900 flex items-center gap-2">
-              <FileText className="w-4 h-4 text-sky-600" /> Violation History ({tickets.length} Recorded)
+              <FileText className="w-4 h-4 text-sky-600 shrink-0" /> Violation History ({tickets.length} Recorded)
             </h3>
 
             {tickets.length === 0 ? (

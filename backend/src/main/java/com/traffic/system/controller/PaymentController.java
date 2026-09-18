@@ -28,7 +28,7 @@ public class PaymentController {
     }
 
     @PutMapping("/{id}/verify")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TRAFFIC_OFFICER')")
     public ResponseEntity<PaymentDto> verifyPayment(
             @PathVariable Long id,
             @RequestBody PaymentVerifyDto verifyDto) {
@@ -36,7 +36,7 @@ public class PaymentController {
     }
 
     @GetMapping("/pending")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TRAFFIC_OFFICER')")
     public ResponseEntity<List<PaymentDto>> getPendingPayments() {
         return ResponseEntity.ok(paymentService.getPendingPayments());
     }

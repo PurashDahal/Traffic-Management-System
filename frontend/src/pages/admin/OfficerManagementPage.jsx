@@ -61,41 +61,42 @@ const OfficerManagementPage = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3">
         <div>
-          <h1 className="text-2xl font-extrabold text-slate-900 flex items-center gap-2">
-            <UserCheck className="w-6 h-6 text-sky-600" /> Traffic Officer Management
+          <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 flex items-center gap-2">
+            <UserCheck className="w-5 h-5 sm:w-6 sm:h-6 text-sky-600 shrink-0" />
+            <span className="truncate">Traffic Officer Management</span>
           </h1>
-          <p className="text-xs text-slate-500">Create & manage authorized traffic officer accounts</p>
+          <p className="text-xs text-slate-500 mt-0.5">Create & manage authorized traffic officer accounts</p>
         </div>
 
         <button
           onClick={() => setShowAddForm(!showAddForm)}
-          className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl shadow flex items-center gap-1.5"
+          className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl shadow flex items-center justify-center gap-1.5 self-start sm:self-auto shrink-0"
         >
           <Plus className="w-4 h-4" /> Add Traffic Officer
         </button>
       </div>
 
       {successMsg && (
-        <div className="bg-emerald-50 text-emerald-800 p-4 rounded-xl text-xs flex items-center gap-2 border border-emerald-200">
+        <div className="bg-emerald-50 text-emerald-800 p-3.5 sm:p-4 rounded-xl text-xs flex items-center gap-2 border border-emerald-200">
           <CheckCircle2 className="w-4 h-4 shrink-0" />
-          <span>{successMsg}</span>
+          <span className="break-words">{successMsg}</span>
         </div>
       )}
 
       {error && (
-        <div className="bg-rose-50 text-rose-800 p-4 rounded-xl text-xs flex items-center gap-2 border border-rose-200">
+        <div className="bg-rose-50 text-rose-800 p-3.5 sm:p-4 rounded-xl text-xs flex items-center gap-2 border border-rose-200">
           <AlertCircle className="w-4 h-4 shrink-0" />
-          <span>{error}</span>
+          <span className="break-words">{error}</span>
         </div>
       )}
 
       {/* Add Officer Modal/Form */}
       {showAddForm && (
-        <div className="bg-white rounded-2xl border border-sky-200 p-6 shadow-md space-y-4">
+        <div className="bg-white rounded-2xl border border-sky-200 p-4 sm:p-6 shadow-md space-y-4">
           <h3 className="font-bold text-sm text-slate-900 uppercase tracking-wide">Register New Traffic Officer</h3>
-          <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+          <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs">
             <div>
               <label className="block font-bold text-slate-700 uppercase mb-1">Full Name *</label>
               <input
@@ -166,7 +167,7 @@ const OfficerManagementPage = () => {
                 className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:outline-none"
               />
             </div>
-            <div className="md:col-span-3 flex justify-end gap-2 pt-2">
+            <div className="sm:col-span-2 lg:col-span-3 flex justify-end gap-2 pt-2">
               <button
                 type="button"
                 onClick={() => setShowAddForm(false)}
@@ -187,41 +188,43 @@ const OfficerManagementPage = () => {
       )}
 
       <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-        <table className="w-full text-left text-xs">
-          <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-bold uppercase">
-            <tr>
-              <th className="p-4">Badge / Username</th>
-              <th className="p-4">Officer Name</th>
-              <th className="p-4">Contact</th>
-              <th className="p-4">Police ID</th>
-              <th className="p-4">Status</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-slate-100">
-            {officers.length === 0 ? (
+        <div className="overflow-x-auto w-full">
+          <table className="w-full text-left text-xs min-w-[650px]">
+            <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-bold uppercase">
               <tr>
-                <td colSpan="5" className="p-8 text-center text-slate-400">No traffic officers registered yet.</td>
+                <th className="p-3.5 sm:p-4">Badge / Username</th>
+                <th className="p-3.5 sm:p-4">Officer Name</th>
+                <th className="p-3.5 sm:p-4">Contact</th>
+                <th className="p-3.5 sm:p-4">Police ID</th>
+                <th className="p-3.5 sm:p-4">Status</th>
               </tr>
-            ) : (
-              officers.map(off => (
-                <tr key={off.id} className="hover:bg-slate-50">
-                  <td className="p-4 font-mono font-bold text-sky-700">@{off.username}</td>
-                  <td className="p-4 font-semibold text-slate-900">{off.fullName}</td>
-                  <td className="p-4 text-slate-600">
-                    <div>{off.email}</div>
-                    <div className="text-[10px] text-slate-400">{off.phone || 'N/A'}</div>
-                  </td>
-                  <td className="p-4 text-slate-600 font-mono">{off.citizenshipNo || '-'}</td>
-                  <td className="p-4">
-                    <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">
-                      ACTIVE OFFICER
-                    </span>
-                  </td>
+            </thead>
+            <tbody className="divide-y divide-slate-100">
+              {officers.length === 0 ? (
+                <tr>
+                  <td colSpan="5" className="p-8 text-center text-slate-400">No traffic officers registered yet.</td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+              ) : (
+                officers.map(off => (
+                  <tr key={off.id} className="hover:bg-slate-50">
+                    <td className="p-3.5 sm:p-4 font-mono font-bold text-sky-700 whitespace-nowrap">@{off.username}</td>
+                    <td className="p-3.5 sm:p-4 font-semibold text-slate-900">{off.fullName}</td>
+                    <td className="p-3.5 sm:p-4 text-slate-600">
+                      <div>{off.email}</div>
+                      <div className="text-[10px] text-slate-400">{off.phone || 'N/A'}</div>
+                    </td>
+                    <td className="p-3.5 sm:p-4 text-slate-600 font-mono whitespace-nowrap">{off.citizenshipNo || '-'}</td>
+                    <td className="p-3.5 sm:p-4 whitespace-nowrap">
+                      <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">
+                        ACTIVE OFFICER
+                      </span>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

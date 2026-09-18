@@ -39,21 +39,21 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">
-      <div className="max-w-md w-full bg-white rounded-3xl shadow-2xl p-8 border border-slate-200">
+    <div className="min-h-screen bg-slate-900 flex items-center justify-center p-3 sm:p-4">
+      <div className="max-w-md w-full bg-white rounded-3xl shadow-2xl p-5 sm:p-8 border border-slate-200">
         
         <div className="text-center mb-6">
-          <div className="w-14 h-14 bg-emerald-600 text-white rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-lg">
-            <Shield className="w-8 h-8" />
+          <div className="w-12 h-12 sm:w-14 sm:h-14 bg-emerald-600 text-white rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-lg">
+            <Shield className="w-6 h-6 sm:w-8 sm:h-8" />
           </div>
-          <h1 className="text-2xl font-extrabold text-slate-900">Vehicle Owner Registration</h1>
+          <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900">Vehicle Owner Registration</h1>
           <p className="text-xs text-slate-500 mt-1 font-medium">Create account to view tickets & submit payments</p>
         </div>
 
         {error && (
           <div className="mb-5 bg-rose-50 border border-rose-200 text-rose-700 p-3 rounded-xl text-xs flex items-center gap-2">
             <AlertCircle className="w-4 h-4 shrink-0" />
-            <span>{error}</span>
+            <span className="break-words">{error}</span>
           </div>
         )}
 
@@ -71,7 +71,7 @@ const RegisterPage = () => {
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="block font-bold text-slate-700 uppercase mb-1">Username *</label>
               <input
@@ -123,7 +123,7 @@ const RegisterPage = () => {
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="block font-bold text-slate-700 uppercase mb-1">Citizenship No</label>
               <input

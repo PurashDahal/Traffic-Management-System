@@ -27,7 +27,7 @@ export const SystemSettingsProvider = ({ children }) => {
     if (settings.APP_LOGO_PATH) {
       return `/api/files/${settings.APP_LOGO_PATH}`;
     }
-    return null;
+    return '/logo/logo.png';
   };
 
   const getEsewaQrUrl = () => {

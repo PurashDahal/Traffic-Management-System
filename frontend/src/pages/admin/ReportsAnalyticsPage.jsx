@@ -41,23 +41,24 @@ const ReportsAnalyticsPage = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-extrabold text-slate-900 flex items-center gap-2">
-          <BarChart3 className="w-6 h-6 text-purple-600" /> Database Reports & AI Analytics
+        <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 flex items-center gap-2">
+          <BarChart3 className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600 shrink-0" />
+          <span className="truncate">Database Reports & AI Analytics</span>
         </h1>
-        <p className="text-xs text-slate-500">PostgreSQL data analytics paired with natural language AI query insights</p>
+        <p className="text-xs text-slate-500 mt-0.5">PostgreSQL data analytics paired with natural language AI query insights</p>
       </div>
 
       {/* AI Natural Language Query Widget */}
-      <div className="bg-slate-900 text-white rounded-2xl p-6 shadow-xl border border-indigo-950">
-        <div className="flex items-center gap-2 text-amber-400 font-bold text-sm mb-2">
-          <Sparkles className="w-5 h-5" />
+      <div className="bg-slate-900 text-white rounded-2xl p-4 sm:p-6 shadow-xl border border-indigo-950">
+        <div className="flex items-center gap-2 text-amber-400 font-bold text-xs sm:text-sm mb-2">
+          <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
           <span>Ask AI Assistant (Natural Language Database Query)</span>
         </div>
-        <p className="text-xs text-slate-300 mb-4">
+        <p className="text-xs text-slate-300 mb-4 leading-relaxed break-words">
           Ask questions about violation trends, common tickets, or unpaid fines. The system executes safe SQL aggregation queries and AI returns natural language summaries.
         </p>
 
-        <form onSubmit={handleNlQuery} className="flex gap-2">
+        <form onSubmit={handleNlQuery} className="flex flex-col sm:flex-row gap-2">
           <div className="relative flex-1">
             <HelpCircle className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
             <input
@@ -71,7 +72,7 @@ const ReportsAnalyticsPage = () => {
           <button
             type="submit"
             disabled={querying || !nlQuestion.trim()}
-            className="px-5 py-2.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs rounded-xl shadow flex items-center gap-1.5 transition-all disabled:opacity-50"
+            className="px-5 py-2.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs rounded-xl shadow flex items-center justify-center gap-1.5 transition-all disabled:opacity-50 shrink-0"
           >
             <Send className="w-4 h-4" /> {querying ? 'Analyzing...' : 'Ask AI'}
           </button>
@@ -80,23 +81,23 @@ const ReportsAnalyticsPage = () => {
         {nlResult && (
           <div className="mt-4 bg-slate-800/90 border border-amber-500/30 rounded-xl p-4 space-y-2">
             <span className="text-[10px] font-bold uppercase text-amber-400 block tracking-wider">AI Summary Response</span>
-            <p className="text-sm font-semibold text-white leading-relaxed">{nlResult.answer}</p>
+            <p className="text-xs sm:text-sm font-semibold text-white leading-relaxed break-words">{nlResult.answer}</p>
           </div>
         )}
       </div>
 
       {/* Database Statistics Summary */}
-      <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
+      <div className="bg-white rounded-2xl border border-slate-200 p-4 sm:p-6 shadow-sm space-y-4">
         <h3 className="font-bold text-sm text-slate-900 flex items-center gap-2">
-          <Database className="w-5 h-5 text-sky-600" /> PostgreSQL Breakdown by Violation Category
+          <Database className="w-5 h-5 text-sky-600 shrink-0" /> PostgreSQL Breakdown by Violation Category
         </h3>
 
         {chartData.length === 0 ? (
           <p className="text-xs text-slate-400 py-8 text-center">No recorded violations in database to render analytics.</p>
         ) : (
-          <div className="h-64 w-full pt-4">
+          <div className="h-64 w-full pt-4 overflow-x-auto">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 20 }}>
+              <BarChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 25 }}>
                 <XAxis dataKey="name" tick={{ fontSize: 10 }} interval={0} angle={-15} textAnchor="end" />
                 <YAxis tick={{ fontSize: 10 }} />
                 <Tooltip contentStyle={{ borderRadius: '12px', fontSize: '12px' }} />

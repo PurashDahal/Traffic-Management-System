@@ -92,9 +92,9 @@ public class PaymentService {
 
     @Transactional
     public PaymentDto verifyPayment(Long paymentId, PaymentVerifyDto verifyDto) {
-        User admin = authService.getCurrentUser();
-        if (admin.getRole() != RoleName.ADMIN) {
-            throw new UnauthorizedException("Only Admin can verify or reject payments.");
+        User verifier = authService.getCurrentUser();
+        if (verifier.getRole() != RoleName.ADMIN && verifier.getRole() != RoleName.TRAFFIC_OFFICER) {
+            throw new UnauthorizedException("Only Admin or Traffic Officers can verify or reject payments.");
         }
 
         Payment payment = paymentRepository.findById(paymentId)
@@ -105,7 +105,7 @@ public class PaymentService {
 
         if (verifyDto.isApprove()) {
             payment.setStatus(PaymentStatus.PAID);
-            payment.setVerifiedBy(admin);
+            payment.setVerifiedBy(verifier);
             payment.setVerifiedAt(LocalDateTime.now());
             payment.setRejectionReason(null);
 
@@ -115,11 +115,11 @@ public class PaymentService {
                     "Payment Verified Success",
                     "Your payment for Ticket " + ticket.getTicketNumber() + " has been verified. Payment Status: PAID.");
 
-            auditLogService.logAction(admin, "PAYMENT_VERIFIED", "Payment", payment.getId().toString(),
-                    "Admin verified payment for Ticket " + ticket.getTicketNumber() + " (Amount: Rs. " + payment.getAmount() + ")", null);
+            auditLogService.logAction(verifier, "PAYMENT_VERIFIED", "Payment", payment.getId().toString(),
+                    verifier.getRole() + " verified payment for Ticket " + ticket.getTicketNumber() + " (Amount: Rs. " + payment.getAmount() + ")", null);
         } else {
             payment.setStatus(PaymentStatus.REJECTED);
-            payment.setVerifiedBy(admin);
+            payment.setVerifiedBy(verifier);
             payment.setVerifiedAt(LocalDateTime.now());
             payment.setRejectionReason(verifyDto.getRejectionReason() != null ? verifyDto.getRejectionReason() : "Invalid payment proof");
 
@@ -129,8 +129,8 @@ public class PaymentService {
                     "Payment Verification Rejected",
                     "Your payment proof for Ticket " + ticket.getTicketNumber() + " was rejected. Reason: " + payment.getRejectionReason() + ". Please upload valid proof.");
 
-            auditLogService.logAction(admin, "PAYMENT_REJECTED", "Payment", payment.getId().toString(),
-                    "Admin rejected payment for Ticket " + ticket.getTicketNumber() + ". Reason: " + payment.getRejectionReason(), null);
+            auditLogService.logAction(verifier, "PAYMENT_REJECTED", "Payment", payment.getId().toString(),
+                    verifier.getRole() + " rejected payment for Ticket " + ticket.getTicketNumber() + ". Reason: " + payment.getRejectionReason(), null);
         }
 
         paymentRepository.save(payment);
@@ -141,8 +141,8 @@ public class PaymentService {
 
     public List<PaymentDto> getPendingPayments() {
         User currentUser = authService.getCurrentUser();
-        if (currentUser.getRole() != RoleName.ADMIN) {
-            throw new UnauthorizedException("Only Admin can access pending payments.");
+        if (currentUser.getRole() != RoleName.ADMIN && currentUser.getRole() != RoleName.TRAFFIC_OFFICER) {
+            throw new UnauthorizedException("Only Admin or Traffic Officers can access pending payments.");
         }
         return paymentRepository.findByStatus(PaymentStatus.PENDING_VERIFICATION)
                 .stream().map(PaymentService::mapToPaymentDto).collect(Collectors.toList());

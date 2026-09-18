@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import java.util.List;
 
 @RestController
@@ -33,5 +34,12 @@ public class TicketController {
     @GetMapping("/id/{id}")
     public ResponseEntity<TicketDto> getTicketById(@PathVariable Long id) {
         return ResponseEntity.ok(violationService.getTicketById(id));
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> deleteTicket(@PathVariable Long id) {
+        violationService.deleteTicket(id);
+        return ResponseEntity.noContent().build();
     }
 }

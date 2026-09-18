@@ -35,11 +35,18 @@ public class FileStorageService {
             throw new FileStorageException("Failed to store empty file.");
         }
 
-        String originalFilename = StringUtils.cleanPath(file.getOriginalFilename() != null ? file.getOriginalFilename() : "file");
+        String originalFilename = StringUtils.cleanPath(file.getOriginalFilename() != null && !file.getOriginalFilename().isEmpty() ? file.getOriginalFilename() : "upload.jpg");
         String extension = getFileExtension(originalFilename);
 
+        if (extension.isEmpty() && file.getContentType() != null) {
+            String mime = file.getContentType().toLowerCase();
+            if (mime.contains("jpeg") || mime.contains("jpg")) extension = "jpg";
+            else if (mime.contains("png")) extension = "png";
+            else if (mime.contains("webp")) extension = "webp";
+        }
+
         if (!ALLOWED_EXTENSIONS.contains(extension.toLowerCase())) {
-            throw new FileStorageException("Invalid file type. Only JPG, JPEG, PNG, and WEBP are allowed.");
+            throw new FileStorageException("Invalid file type (" + extension + "). Only JPG, JPEG, PNG, and WEBP are allowed.");
         }
 
         try {

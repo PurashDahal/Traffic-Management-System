@@ -38,27 +38,28 @@ const OwnerProfilePage = () => {
   return (
     <div className="space-y-6 max-w-xl">
       <div>
-        <h1 className="text-2xl font-extrabold text-slate-900 flex items-center gap-2">
-          <User className="w-6 h-6 text-emerald-600" /> Account Profile Settings
+        <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 flex items-center gap-2">
+          <User className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-600 shrink-0" />
+          <span className="truncate">Account Profile Settings</span>
         </h1>
-        <p className="text-xs text-slate-500">Manage your personal details and driver documents</p>
+        <p className="text-xs text-slate-500 mt-0.5">Manage your personal details and driver documents</p>
       </div>
 
       {msg && (
-        <div className="bg-emerald-50 text-emerald-800 p-4 rounded-xl text-xs flex items-center gap-2 border border-emerald-200">
+        <div className="bg-emerald-50 text-emerald-800 p-3.5 sm:p-4 rounded-xl text-xs flex items-center gap-2 border border-emerald-200">
           <CheckCircle2 className="w-4 h-4 shrink-0" />
-          <span>{msg}</span>
+          <span className="break-words">{msg}</span>
         </div>
       )}
 
       {error && (
-        <div className="bg-rose-50 text-rose-800 p-4 rounded-xl text-xs flex items-center gap-2 border border-rose-200">
+        <div className="bg-rose-50 text-rose-800 p-3.5 sm:p-4 rounded-xl text-xs flex items-center gap-2 border border-rose-200">
           <AlertCircle className="w-4 h-4 shrink-0" />
-          <span>{error}</span>
+          <span className="break-words">{error}</span>
         </div>
       )}
 
-      <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+      <div className="bg-white rounded-2xl border border-slate-200 p-4 sm:p-6 shadow-sm">
         <form onSubmit={handleSubmit} className="space-y-4 text-xs">
           <div>
             <label className="block font-bold text-slate-700 uppercase mb-1">Full Name</label>
@@ -71,7 +72,7 @@ const OwnerProfilePage = () => {
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block font-bold text-slate-700 uppercase mb-1">Username (Read-only)</label>
               <input
@@ -87,7 +88,7 @@ const OwnerProfilePage = () => {
                 type="text"
                 disabled
                 value={user?.email || ''}
-                className="w-full px-3 py-2 border border-slate-200 bg-slate-50 text-slate-500 rounded-xl"
+                className="w-full px-3 py-2 border border-slate-200 bg-slate-50 text-slate-500 rounded-xl truncate"
               />
             </div>
           </div>
@@ -102,7 +103,7 @@ const OwnerProfilePage = () => {
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block font-bold text-slate-700 uppercase mb-1">Citizenship Number</label>
               <input

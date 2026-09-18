@@ -28,7 +28,7 @@ const AdminSettingsPage = () => {
       const formData = new FormData();
       formData.append('file', logoFile);
       await api.post('/admin/settings/logo', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
+        headers: { 'Content-Type': undefined }
       });
       setMsg('Web App Logo updated successfully!');
       setLogoFile(null);
@@ -52,7 +52,7 @@ const AdminSettingsPage = () => {
       const formData = new FormData();
       formData.append('file', qrFile);
       await api.post('/admin/settings/esewa-qr', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
+        headers: { 'Content-Type': undefined }
       });
       setMsg('Official eSewa Payment QR image updated successfully!');
       setQrFile(null);
@@ -78,38 +78,40 @@ const AdminSettingsPage = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-extrabold text-slate-900 flex items-center gap-2">
-          <QrCode className="w-6 h-6 text-sky-600" /> App Logo & eSewa QR Configuration
+        <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 flex items-center gap-2">
+          <QrCode className="w-5 h-5 sm:w-6 sm:h-6 text-sky-600 shrink-0" />
+          <span className="truncate">Branding & eSewa QR Configuration</span>
         </h1>
-        <p className="text-xs text-slate-500">Manage public Web App branding and official eSewa QR payment image</p>
+        <p className="text-xs text-slate-500 mt-0.5">Manage public Web App branding and official eSewa QR payment image</p>
       </div>
 
       {msg && (
-        <div className="bg-emerald-50 text-emerald-800 p-4 rounded-xl text-xs flex items-center gap-2 border border-emerald-200">
+        <div className="bg-emerald-50 text-emerald-800 p-3.5 sm:p-4 rounded-xl text-xs flex items-center gap-2 border border-emerald-200">
           <CheckCircle2 className="w-4 h-4 shrink-0" />
-          <span>{msg}</span>
+          <span className="break-words">{msg}</span>
         </div>
       )}
 
       {error && (
-        <div className="bg-rose-50 text-rose-800 p-4 rounded-xl text-xs flex items-center gap-2 border border-rose-200">
+        <div className="bg-rose-50 text-rose-800 p-3.5 sm:p-4 rounded-xl text-xs flex items-center gap-2 border border-rose-200">
           <AlertCircle className="w-4 h-4 shrink-0" />
-          <span>{error}</span>
+          <span className="break-words">{error}</span>
         </div>
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         
         {/* 1. Official eSewa QR Payment Code Upload */}
-        <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
+        <div className="bg-white rounded-2xl border border-slate-200 p-4 sm:p-6 shadow-sm space-y-4">
           <div className="flex justify-between items-center border-b border-slate-100 pb-3">
             <h3 className="font-bold text-sm text-slate-900 flex items-center gap-2">
-              <QrCode className="w-5 h-5 text-emerald-600" /> Official eSewa Payment QR
+              <QrCode className="w-5 h-5 text-emerald-600 shrink-0" />
+              <span>Official eSewa Payment QR</span>
             </h3>
             {qrUrl && (
               <button
                 onClick={handleRemoveQr}
-                className="text-xs text-rose-600 hover:text-rose-800 font-semibold flex items-center gap-1"
+                className="text-xs text-rose-600 hover:text-rose-800 font-semibold flex items-center gap-1 shrink-0"
               >
                 <Trash2 className="w-3.5 h-3.5" /> Remove QR
               </button>
@@ -119,7 +121,7 @@ const AdminSettingsPage = () => {
           <div className="text-center p-4 bg-slate-50 rounded-xl border border-slate-200">
             {qrUrl ? (
               <div className="space-y-2">
-                <img src={qrUrl} alt="Current eSewa QR" className="w-48 h-48 object-contain mx-auto bg-white p-2 rounded-lg border shadow-sm" />
+                <img src={qrUrl} alt="Current eSewa QR" className="w-44 h-44 sm:w-48 sm:h-48 object-contain mx-auto bg-white p-2 rounded-lg border shadow-sm" />
                 <span className="text-[10px] text-emerald-700 font-bold block">Active Official eSewa QR Code</span>
               </div>
             ) : (
@@ -150,10 +152,11 @@ const AdminSettingsPage = () => {
         </div>
 
         {/* 2. Web App Logo Upload */}
-        <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
+        <div className="bg-white rounded-2xl border border-slate-200 p-4 sm:p-6 shadow-sm space-y-4">
           <div className="border-b border-slate-100 pb-3">
             <h3 className="font-bold text-sm text-slate-900 flex items-center gap-2">
-              <ImageIcon className="w-5 h-5 text-sky-600" /> Web Application Logo
+              <ImageIcon className="w-5 h-5 text-sky-600 shrink-0" />
+              <span>Web Application Logo</span>
             </h3>
           </div>
 

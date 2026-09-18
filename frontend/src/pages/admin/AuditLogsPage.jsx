@@ -20,61 +20,64 @@ const AuditLogsPage = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3">
         <div>
-          <h1 className="text-2xl font-extrabold text-slate-900 flex items-center gap-2">
-            <FileText className="w-6 h-6 text-slate-700" /> System Security Audit Logs
+          <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 flex items-center gap-2">
+            <FileText className="w-5 h-5 sm:w-6 sm:h-6 text-slate-700 shrink-0" />
+            <span className="truncate">System Security Audit Logs</span>
           </h1>
-          <p className="text-xs text-slate-500">Tamper-evident audit trail of administrative, officer, and user actions</p>
+          <p className="text-xs text-slate-500 mt-0.5">Tamper-evident audit trail of administrative, officer, and user actions</p>
         </div>
 
-        <div className="relative">
+        <div className="relative w-full sm:w-64 shrink-0">
           <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
           <input
             type="text"
             placeholder="Search action or username..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="pl-9 pr-4 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-slate-900 focus:outline-none w-64"
+            className="w-full pl-9 pr-4 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-slate-900 focus:outline-none"
           />
         </div>
       </div>
 
       <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-        <table className="w-full text-left text-xs">
-          <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-bold uppercase font-mono">
-            <tr>
-              <th className="p-4">Timestamp</th>
-              <th className="p-4">Performed By</th>
-              <th className="p-4">Action</th>
-              <th className="p-4">Entity Details</th>
-              <th className="p-4">IP Address</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-slate-100 font-mono">
-            {filtered.length === 0 ? (
+        <div className="overflow-x-auto w-full">
+          <table className="w-full text-left text-xs min-w-[700px]">
+            <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-bold uppercase font-mono">
               <tr>
-                <td colSpan="5" className="p-8 text-center text-slate-400 font-sans">No audit log entries found.</td>
+                <th className="p-3.5 sm:p-4">Timestamp</th>
+                <th className="p-3.5 sm:p-4">Performed By</th>
+                <th className="p-3.5 sm:p-4">Action</th>
+                <th className="p-3.5 sm:p-4">Entity Details</th>
+                <th className="p-3.5 sm:p-4">IP Address</th>
               </tr>
-            ) : (
-              filtered.map(l => (
-                <tr key={l.id} className="hover:bg-slate-50">
-                  <td className="p-4 text-slate-500 text-[11px]">
-                    {new Date(l.timestamp).toLocaleString()}
-                  </td>
-                  <td className="p-4 font-bold text-slate-900">@{l.username}</td>
-                  <td className="p-4 font-bold text-sky-700">
-                    <span className="bg-sky-50 px-2 py-0.5 rounded border border-sky-200 text-[10px]">
-                      {l.action}
-                    </span>
-                  </td>
-                  <td className="p-4 text-slate-700 font-sans text-xs max-w-md">{l.details}</td>
-                  <td className="p-4 text-slate-400 text-[11px]">{l.ipAddress || '127.0.0.1'}</td>
+            </thead>
+            <tbody className="divide-y divide-slate-100 font-mono">
+              {filtered.length === 0 ? (
+                <tr>
+                  <td colSpan="5" className="p-8 text-center text-slate-400 font-sans">No audit log entries found.</td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+              ) : (
+                filtered.map(l => (
+                  <tr key={l.id} className="hover:bg-slate-50">
+                    <td className="p-3.5 sm:p-4 text-slate-500 text-[11px] whitespace-nowrap">
+                      {new Date(l.timestamp).toLocaleString()}
+                    </td>
+                    <td className="p-3.5 sm:p-4 font-bold text-slate-900 whitespace-nowrap">@{l.username}</td>
+                    <td className="p-3.5 sm:p-4 font-bold text-sky-700 whitespace-nowrap">
+                      <span className="bg-sky-50 px-2 py-0.5 rounded border border-sky-200 text-[10px]">
+                        {l.action}
+                      </span>
+                    </td>
+                    <td className="p-3.5 sm:p-4 text-slate-700 font-sans text-xs max-w-md break-words">{l.details}</td>
+                    <td className="p-3.5 sm:p-4 text-slate-400 text-[11px] whitespace-nowrap">{l.ipAddress || '127.0.0.1'}</td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

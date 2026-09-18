@@ -59,40 +59,41 @@ const ViolationTypesConfigPage = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3">
         <div>
-          <h1 className="text-2xl font-extrabold text-slate-900 flex items-center gap-2">
-            <FileCheck className="w-6 h-6 text-sky-600" /> Violation Types & Fine Rules
+          <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 flex items-center gap-2">
+            <FileCheck className="w-5 h-5 sm:w-6 sm:h-6 text-sky-600 shrink-0" />
+            <span className="truncate">Violation Types & Fine Rules</span>
           </h1>
-          <p className="text-xs text-slate-500">Configure traffic violation categories and fine amounts</p>
+          <p className="text-xs text-slate-500 mt-0.5">Configure traffic violation categories and fine amounts</p>
         </div>
 
         <button
           onClick={() => setShowAddForm(!showAddForm)}
-          className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl shadow flex items-center gap-1.5"
+          className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl shadow flex items-center justify-center gap-1.5 self-start sm:self-auto shrink-0"
         >
           <Plus className="w-4 h-4" /> Add Violation Category
         </button>
       </div>
 
       {msg && (
-        <div className="bg-emerald-50 text-emerald-800 p-3.5 rounded-xl text-xs flex items-center gap-2 border border-emerald-200">
+        <div className="bg-emerald-50 text-emerald-800 p-3.5 sm:p-4 rounded-xl text-xs flex items-center gap-2 border border-emerald-200">
           <Check className="w-4 h-4 shrink-0" />
-          <span>{msg}</span>
+          <span className="break-words">{msg}</span>
         </div>
       )}
 
       {error && (
-        <div className="bg-rose-50 text-rose-800 p-3.5 rounded-xl text-xs flex items-center gap-2 border border-rose-200">
+        <div className="bg-rose-50 text-rose-800 p-3.5 sm:p-4 rounded-xl text-xs flex items-center gap-2 border border-rose-200">
           <AlertCircle className="w-4 h-4 shrink-0" />
-          <span>{error}</span>
+          <span className="break-words">{error}</span>
         </div>
       )}
 
       {showAddForm && (
-        <div className="bg-white rounded-2xl border border-sky-200 p-5 shadow-md">
+        <div className="bg-white rounded-2xl border border-sky-200 p-4 sm:p-5 shadow-md">
           <h3 className="font-bold text-xs uppercase tracking-wide text-slate-900 mb-3">Add New Violation Category</h3>
-          <form onSubmit={handleAddType} className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+          <form onSubmit={handleAddType} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs">
             <div>
               <label className="block font-bold text-slate-700 uppercase mb-1">Category Name *</label>
               <input
@@ -115,7 +116,7 @@ const ViolationTypesConfigPage = () => {
                 className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:outline-none"
               />
             </div>
-            <div className="md:col-span-3">
+            <div className="sm:col-span-2 lg:col-span-3">
               <label className="block font-bold text-slate-700 uppercase mb-1">Standard Description</label>
               <input
                 type="text"
@@ -125,7 +126,7 @@ const ViolationTypesConfigPage = () => {
                 className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:outline-none"
               />
             </div>
-            <div className="md:col-span-3 flex justify-end gap-2 pt-2">
+            <div className="sm:col-span-2 lg:col-span-3 flex justify-end gap-2 pt-2">
               <button
                 type="button"
                 onClick={() => setShowAddForm(false)}
@@ -145,61 +146,63 @@ const ViolationTypesConfigPage = () => {
       )}
 
       <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-        <table className="w-full text-left text-xs">
-          <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-bold uppercase">
-            <tr>
-              <th className="p-4">Violation Category</th>
-              <th className="p-4">Description</th>
-              <th className="p-4">Default Fine Amount</th>
-              <th className="p-4 text-right">Configure</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-slate-100">
-            {types.map(t => (
-              <tr key={t.id} className="hover:bg-slate-50">
-                <td className="p-4 font-bold text-slate-900">{t.categoryName}</td>
-                <td className="p-4 text-slate-600 max-w-xs">{t.description || '-'}</td>
-                <td className="p-4 font-bold text-emerald-700 font-mono text-sm">
-                  {editingId === t.id ? (
-                    <input
-                      type="number"
-                      value={editFine}
-                      onChange={(e) => setEditFine(e.target.value)}
-                      className="w-28 px-2 py-1 border border-emerald-400 rounded focus:ring-2 focus:ring-emerald-500"
-                    />
-                  ) : (
-                    `Rs. ${t.defaultFineAmount?.toLocaleString()}`
-                  )}
-                </td>
-                <td className="p-4 text-right">
-                  {editingId === t.id ? (
-                    <div className="flex justify-end gap-1">
-                      <button
-                        onClick={() => handleUpdateFine(t)}
-                        className="px-2.5 py-1 bg-emerald-600 text-white font-bold rounded text-[11px] shadow"
-                      >
-                        Save
-                      </button>
-                      <button
-                        onClick={() => setEditingId(null)}
-                        className="px-2.5 py-1 bg-slate-200 text-slate-700 font-bold rounded text-[11px]"
-                      >
-                        Cancel
-                      </button>
-                    </div>
-                  ) : (
-                    <button
-                      onClick={() => { setEditingId(t.id); setEditFine(t.defaultFineAmount); }}
-                      className="px-2.5 py-1 text-sky-700 bg-sky-50 hover:bg-sky-100 font-bold rounded border border-sky-200 text-[11px] flex items-center gap-1 ml-auto"
-                    >
-                      <Edit2 className="w-3.5 h-3.5" /> Edit Fine
-                    </button>
-                  )}
-                </td>
+        <div className="overflow-x-auto w-full">
+          <table className="w-full text-left text-xs min-w-[650px]">
+            <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-bold uppercase">
+              <tr>
+                <th className="p-3.5 sm:p-4">Violation Category</th>
+                <th className="p-3.5 sm:p-4">Description</th>
+                <th className="p-3.5 sm:p-4">Default Fine Amount</th>
+                <th className="p-3.5 sm:p-4 text-right">Configure</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="divide-y divide-slate-100">
+              {types.map(t => (
+                <tr key={t.id} className="hover:bg-slate-50">
+                  <td className="p-3.5 sm:p-4 font-bold text-slate-900 whitespace-nowrap">{t.categoryName}</td>
+                  <td className="p-3.5 sm:p-4 text-slate-600 break-words max-w-xs">{t.description || '-'}</td>
+                  <td className="p-3.5 sm:p-4 font-bold text-emerald-700 font-mono text-sm whitespace-nowrap">
+                    {editingId === t.id ? (
+                      <input
+                        type="number"
+                        value={editFine}
+                        onChange={(e) => setEditFine(e.target.value)}
+                        className="w-28 px-2 py-1 border border-emerald-400 rounded focus:ring-2 focus:ring-emerald-500"
+                      />
+                    ) : (
+                      `Rs. ${t.defaultFineAmount?.toLocaleString()}`
+                    )}
+                  </td>
+                  <td className="p-3.5 sm:p-4 text-right whitespace-nowrap">
+                    {editingId === t.id ? (
+                      <div className="flex justify-end gap-1">
+                        <button
+                          onClick={() => handleUpdateFine(t)}
+                          className="px-2.5 py-1 bg-emerald-600 text-white font-bold rounded text-[11px] shadow"
+                        >
+                          Save
+                        </button>
+                        <button
+                          onClick={() => setEditingId(null)}
+                          className="px-2.5 py-1 bg-slate-200 text-slate-700 font-bold rounded text-[11px]"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={() => { setEditingId(t.id); setEditFine(t.defaultFineAmount); }}
+                        className="px-2.5 py-1 text-sky-700 bg-sky-50 hover:bg-sky-100 font-bold rounded border border-sky-200 text-[11px] inline-flex items-center gap-1 ml-auto"
+                      >
+                        <Edit2 className="w-3.5 h-3.5" /> Edit Fine
+                      </button>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

@@ -57,40 +57,41 @@ const MyVehiclesPage = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3">
         <div>
-          <h1 className="text-2xl font-extrabold text-slate-900 flex items-center gap-2">
-            <Car className="w-6 h-6 text-emerald-600" /> My Vehicles
+          <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 flex items-center gap-2">
+            <Car className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-600 shrink-0" />
+            <span className="truncate">My Vehicles</span>
           </h1>
-          <p className="text-xs text-slate-500">Register and manage your personal vehicles</p>
+          <p className="text-xs text-slate-500 mt-0.5">Register and manage your personal vehicles</p>
         </div>
 
         <button
           onClick={() => setShowAddForm(!showAddForm)}
-          className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow flex items-center gap-1.5"
+          className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow flex items-center justify-center gap-1.5 self-start sm:self-auto shrink-0"
         >
           <Plus className="w-4 h-4" /> Register New Vehicle
         </button>
       </div>
 
       {msg && (
-        <div className="bg-emerald-50 text-emerald-800 p-4 rounded-xl text-xs flex items-center gap-2 border border-emerald-200">
+        <div className="bg-emerald-50 text-emerald-800 p-3.5 sm:p-4 rounded-xl text-xs flex items-center gap-2 border border-emerald-200">
           <CheckCircle2 className="w-4 h-4 shrink-0" />
-          <span>{msg}</span>
+          <span className="break-words">{msg}</span>
         </div>
       )}
 
       {error && (
-        <div className="bg-rose-50 text-rose-800 p-4 rounded-xl text-xs flex items-center gap-2 border border-rose-200">
+        <div className="bg-rose-50 text-rose-800 p-3.5 sm:p-4 rounded-xl text-xs flex items-center gap-2 border border-rose-200">
           <AlertCircle className="w-4 h-4 shrink-0" />
-          <span>{error}</span>
+          <span className="break-words">{error}</span>
         </div>
       )}
 
       {showAddForm && (
-        <div className="bg-white rounded-2xl border border-emerald-200 p-6 shadow-md">
+        <div className="bg-white rounded-2xl border border-emerald-200 p-4 sm:p-6 shadow-md">
           <h3 className="font-bold text-xs uppercase tracking-wide text-slate-900 mb-3">Register Vehicle</h3>
-          <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+          <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
             <div>
               <label className="block font-bold text-slate-700 uppercase mb-1">Vehicle Number *</label>
               <input
@@ -143,7 +144,7 @@ const MyVehiclesPage = () => {
               />
             </div>
 
-            <div className="md:col-span-2 flex justify-end gap-2 pt-2">
+            <div className="sm:col-span-2 flex justify-end gap-2 pt-2">
               <button
                 type="button"
                 onClick={() => setShowAddForm(false)}
@@ -164,20 +165,20 @@ const MyVehiclesPage = () => {
       )}
 
       {/* Vehicles Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {vehicles.length === 0 ? (
-          <div className="col-span-3 bg-white p-8 rounded-2xl border border-slate-200 text-slate-400 text-xs text-center">
+          <div className="col-span-full bg-white p-8 rounded-2xl border border-slate-200 text-slate-400 text-xs text-center">
             No registered vehicles yet. Click <strong>Register New Vehicle</strong> above to add your vehicle.
           </div>
         ) : (
           vehicles.map(v => (
-            <div key={v.id} className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-2">
+            <div key={v.id} className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-sm space-y-2">
               <span className="text-[10px] font-bold uppercase text-emerald-700 tracking-wider block">Registered Vehicle</span>
-              <h3 className="text-xl font-extrabold text-slate-900 font-mono">{v.vehicleNumber}</h3>
+              <h3 className="text-lg sm:text-xl font-extrabold text-slate-900 font-mono break-words">{v.vehicleNumber}</h3>
               <div className="text-xs text-slate-600 space-y-1 pt-1 border-t border-slate-100">
                 <div>Type: <strong className="text-slate-800">{v.vehicleType}</strong></div>
                 <div>Model: <strong className="text-slate-800">{v.model || '-'}</strong></div>
-                <div>Bluebook No: <strong className="text-slate-800 font-mono">{v.bluebookNumber || '-'}</strong></div>
+                <div>Bluebook: <strong className="text-slate-800 font-mono">{v.bluebookNumber || '-'}</strong></div>
               </div>
             </div>
           ))

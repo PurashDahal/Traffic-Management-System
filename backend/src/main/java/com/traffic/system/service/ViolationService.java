@@ -162,6 +162,41 @@ public class ViolationService {
         return mapToTicketDto(ticket);
     }
 
+    @Transactional
+    public void deleteTicket(Long ticketId) {
+        User currentUser = authService.getCurrentUser();
+        if (currentUser.getRole() != RoleName.ADMIN) {
+            throw new UnauthorizedException("Only Admin can delete traffic violation tickets.");
+        }
+
+        Ticket ticket = ticketRepository.findById(ticketId)
+                .orElseThrow(() -> new ResourceNotFoundException("Ticket not found with id: " + ticketId));
+
+        Violation violation = ticket.getViolation();
+
+        // Delete associated payment if exists
+        Payment payment = paymentRepository.findByTicket(ticket).orElse(null);
+        if (payment != null) {
+            paymentRepository.delete(payment);
+        }
+
+        // Delete associated evidence records
+        List<Evidence> evidences = evidenceRepository.findByTicket(ticket);
+        if (!evidences.isEmpty()) {
+            evidenceRepository.deleteAll(evidences);
+        }
+
+        // Delete Ticket & Violation
+        ticketRepository.delete(ticket);
+        if (violation != null) {
+            violationRepository.delete(violation);
+        }
+
+        // Audit Log
+        auditLogService.logAction(currentUser, "TICKET_DELETED", "Ticket", ticketId.toString(),
+                "Admin deleted ticket " + ticket.getTicketNumber() + " (Vehicle: " + (violation != null && violation.getVehicle() != null ? violation.getVehicle().getVehicleNumber() : "N/A") + ")", null);
+    }
+
     private synchronized String generateUniqueTicketNumber() {
         long count = ticketRepository.count() + 1;
         String year = String.valueOf(LocalDateTime.now().getYear());
